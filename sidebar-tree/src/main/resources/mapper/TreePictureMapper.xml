@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.sidebarTree.mapper.TreePictureMapper">
+
+    <resultMap type="TreePicture" id="TreePictureResult">
+        <result property="pictureId"    column="picture_id"    />
+        <result property="pictureUrl"    column="picture_url"    />
+        <result property="treeId"    column="tree_id"    />
+        <result property="isShow"    column="is_show"    />
+        <result property="lessPictureUrl"    column="less_picture_url"    />
+    </resultMap>
+
+    <sql id="selectTreePictureVo">
+        select picture_id, picture_url, tree_id, is_show,less_picture_url from tree_picture
+    </sql>
+
+    <select id="selectTreePictureList" parameterType="TreePicture" resultMap="TreePictureResult">
+        <include refid="selectTreePictureVo"/>
+        <where>
+            <if test="pictureUrl != null  and pictureUrl != ''"> and picture_url = #{pictureUrl}</if>
+            <if test="treeId != null "> and tree_id = #{treeId}</if>
+            <if test="isShow != null "> and is_show = #{isShow}</if>
+        </where>
+    </select>
+
+    <select id="selectTreePictureByPictureId" parameterType="Long" resultMap="TreePictureResult">
+        <include refid="selectTreePictureVo"/>
+        where picture_id = #{pictureId}
+    </select>
+    <select id="selectTreeByTreeId" resultMap="TreePictureResult" parameterType="int">
+        <include refid="selectTreePictureVo"/>
+        where tree_id = #{treeId}
+    </select>
+
+    <insert id="insertTreePicture" parameterType="TreePicture" useGeneratedKeys="true" keyProperty="pictureId">
+        insert into tree_picture
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="pictureUrl != null and pictureUrl != ''">picture_url,</if>
+            <if test="lessPictureUrl != null and lessPictureUrl != ''">less_picture_url,</if>
+            <if test="treeId != null">tree_id,</if>
+            <if test="isShow != null">is_show,</if>
+            create_time
+            ,update_time
+
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="pictureUrl != null and pictureUrl != ''">#{pictureUrl},</if>
+            <if test="lessPictureUrl != null and lessPictureUrl != ''">#{lessPictureUrl},</if>
+            <if test="treeId != null">#{treeId},</if>
+            <if test="isShow != null">#{isShow},</if>
+            current_time,current_time
+         </trim>
+    </insert>
+
+    <update id="updateTreePicture" parameterType="TreePicture">
+        update tree_picture
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="pictureUrl != null and pictureUrl != ''">picture_url = #{pictureUrl},</if>
+            <if test="pictureUrl != null and pictureUrl != ''">picture_url = #{pictureUrl},</if>
+            <if test="treeId != null">tree_id = #{treeId},</if>
+            <if test="isShow != null">is_show = #{isShow},</if>
+        </trim>
+        where picture_id = #{pictureId}
+    </update>
+
+    <delete id="deleteTreePictureByPictureId" parameterType="Long">
+        delete from tree_picture where picture_id = #{pictureId}
+    </delete>
+
+    <delete id="deleteTreePictureByPictureIds" parameterType="String">
+        delete from tree_picture where picture_id in
+        <foreach item="pictureId" collection="array" open="(" separator="," close=")">
+            #{pictureId}
+        </foreach>
+    </delete>
+</mapper>

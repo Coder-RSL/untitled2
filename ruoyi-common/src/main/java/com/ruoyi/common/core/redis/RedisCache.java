@@ -243,4 +243,8 @@ public class RedisCache
     {
         return redisTemplate.keys(pattern);
     }
+
+    public void increment(String limitKey) {
+        redisTemplate.opsForValue().increment(limitKey);
+    }
 }
