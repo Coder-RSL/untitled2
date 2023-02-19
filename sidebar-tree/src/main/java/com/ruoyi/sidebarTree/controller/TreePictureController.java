@@ -46,9 +46,20 @@ public class TreePictureController extends BaseController
      */
     @PostMapping("/upload")
     public AjaxResult upload(int treeId,@RequestParam("file") MultipartFile file,int isShow){
-        boolean upload = fillService.upload(treeId, file, isShow);
-        if(upload) return AjaxResult.success();//查询成功
-        else return AjaxResult.error();
+        AjaxResult result =new AjaxResult();
+        int res= fillService.upload(treeId, file, isShow);
+
+        if(res==1){
+            return result.success("图片上传成功");
+        }
+        else if(res==0){
+            result.put("图片上传失败",200);
+            return result.error("图片上传失败");
+        }
+        else if(res==2){
+            return result.success("部分图片上传成功，但存在不兼容文件，请检查文件类型与格式");
+        }
+        return result;
     }
 
     /**

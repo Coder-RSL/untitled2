@@ -10,7 +10,9 @@ import com.ruoyi.sidebarTree.service.FillService;
 import com.ruoyi.sidebarTree.service.ITreePictureService;
 import com.ruoyi.sidebarTree.utils.DownloadFileUtil;
 import com.ruoyi.sidebarTree.utils.ImageUtil;
+import com.ruoyi.sidebarTree.utils.UnPackeUtil;
 import jnr.ffi.annotations.In;
+import net.sf.sevenzipjbinding.SevenZipException;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.time.DateFormatUtils;
@@ -56,45 +58,148 @@ public class FillServiceImpl implements FillService {
      * 上传图片
      */
     @Override
-    public boolean upload(int treeId, MultipartFile file, int isShow) {
+    public int upload(int treeId, MultipartFile file, int isShow) {
         if (file!=null){
             //获取原文件名
             String filename = file.getOriginalFilename();
             if (filename !=null){
-                //获取文件地址
-                String filePath = getFileUrl(filename,treeId);
-                TreePicture treePicture = new TreePicture();
-                treePicture.setPictureUrl(filePath);
-                treePicture.setIsShow(isShow);
-                treePicture.setTreeId((long)treeId);
-                //创建压缩图
-                String pictureUrl = treePicture.getPictureUrl();
-                File file2 =new File(pictureUrl);
-                StringBuffer absoluteFile =new StringBuffer(file2.getAbsoluteFile().getName());
-                int i = absoluteFile.lastIndexOf(".");
-                System.out.println(i);
-                absoluteFile.toString();
-                String lesspic =new String(file2.getParent()+"\\"+absoluteFile.insert(i,2).toString());
-                treePicture.setLessPictureUrl(lesspic);
-
-                pictureService.insertTreePicture(treePicture);
-
-                File loadFile = new File(filePath);
-                try {
-                    if (!loadFile.getParentFile().exists()){
-                        loadFile.getParentFile().mkdirs();
-                    }
-                    file.transferTo(loadFile);
-                    ImageUtil.lessFiles(pictureUrl);
-                    return true;
-                } catch (IOException e) {
-                    return false;
+                String fileType = getFileType(filename);
+                if(fileType.equals("rar")||fileType.equals("zip"))
+                {
+                    int errortime = uploadUnpack(treeId, file, isShow);
+                    return errortime;
                 }
-            } else return false;
-        } else return false;
+                else {
+                    if(uploadPic(file, filename, treeId, isShow))
+                        return 1;
+                    else{
+                        return 0;
+                    }
+                }
+            } else return 0;
+        } else return 0;
+    }
+
+    //判断文件类型
+    public  String getFileType(String filename){
+        return filename.substring(filename.lastIndexOf(".")+1,filename.length());
     }
 
 
+    //处理压缩包
+    public int uploadUnpack(int treeId, MultipartFile file, int isShow){
+        try {
+            String outDir = UnPackeUtil.uploadPack(file);//输出路径
+            //对输出路径下的文件进行处理进行处理
+            File parentFile =new File(outDir);
+            if(readFile(parentFile,treeId,isShow,0)==0) return 1;//无问题文件
+            else return 2;//出现问题文件
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (SevenZipException e) {
+            e.printStackTrace();
+        }
+        return 1;
+    }
+
+
+    //返回失败的次数,time是其他文件数
+    public int readFile(File file,int treeId,int isShow,int time){
+        File[] list = file.listFiles();
+        if(list.length==0){//如果长度为零则删除
+            file.delete();
+        }
+        else{
+            for (File childrenfile:list) {
+                if(childrenfile.isDirectory()){
+                    time+=readFile(childrenfile,treeId,isShow,0);//递归
+                }
+                else{
+                    String fileType=getFileType(childrenfile.getName());
+
+                    if(fileType.equals("png")||fileType.equals("jpg")||fileType.equals("jpeg")){
+                        uploadPic(childrenfile.getAbsolutePath(),treeId,isShow);//对文件进行你想要的处理
+                    }
+                    else{
+                        childrenfile.delete();//删除其他类型文件
+                        time++;//出现其他类型文件则++
+                    }
+                }
+            }
+        }
+        return time;
+    }
+
+
+
+    //处理图片
+    public  boolean uploadPic(MultipartFile file,String filename,int treeId,int isShow){
+        //获取文件地址
+        String filePath = getFileUrl(filename,treeId);
+        TreePicture treePicture = new TreePicture();
+        treePicture.setPictureUrl(filePath);
+        treePicture.setIsShow(isShow);
+        treePicture.setTreeId((long)treeId);
+        //创建压缩图
+        String pictureUrl = treePicture.getPictureUrl();
+        File file2 =new File(pictureUrl);
+        StringBuffer absoluteFile =new StringBuffer(file2.getAbsoluteFile().getName());
+        int i = absoluteFile.lastIndexOf(".");
+        String lesspic =new String(file2.getParent()+"\\"+absoluteFile.insert(i,2).toString());
+        treePicture.setLessPictureUrl(lesspic);
+
+        String fileType = getFileType(filePath);
+        if(!"png".equals(fileType)){
+            String PngFilePath = filePath.substring(0, filePath.lastIndexOf(".")+1)+"png";//转换为png格式便于后续Python操作
+            ImageUtil.JPEGtoPNGConverter(filePath,PngFilePath);
+            treePicture.setPictureUrl(PngFilePath);
+        }
+
+        pictureService.insertTreePicture(treePicture);
+
+        File loadFile = new File(filePath);
+        try {
+            if (!loadFile.getParentFile().exists()){
+                loadFile.getParentFile().mkdirs();
+            }
+            file.transferTo(loadFile);
+            ImageUtil.lessFiles(pictureUrl);
+            return true;
+        } catch (IOException e) {
+            return false;
+        }
+    }
+
+    //处理图片方法重载
+    public  boolean uploadPic(String filePath,int treeId,int isShow){
+
+        System.out.println(filePath+"*");
+        //获取文件地址
+        TreePicture treePicture = new TreePicture();
+        treePicture.setPictureUrl(filePath);
+        treePicture.setIsShow(isShow);
+        treePicture.setTreeId((long)treeId);
+        //创建压缩图
+        String pictureUrl = treePicture.getPictureUrl();
+        File file2 =new File(pictureUrl);
+        StringBuffer absoluteFile =new StringBuffer(file2.getAbsoluteFile().getName());
+        int i = absoluteFile.lastIndexOf(".");
+        String lesspic =new String(file2.getParent()+"\\"+absoluteFile.insert(i,2).toString());
+        treePicture.setLessPictureUrl(lesspic);
+
+        pictureService.insertTreePicture(treePicture);
+
+        File loadFile = new File(filePath);
+        try {
+            if (!loadFile.getParentFile().exists()){
+                loadFile.getParentFile().mkdirs();
+            }
+            ImageUtil.lessFiles(pictureUrl);
+            return true;
+        } catch (IOException e) {
+            return false;
+        }
+    }
     /**
      * 上传文件
      */

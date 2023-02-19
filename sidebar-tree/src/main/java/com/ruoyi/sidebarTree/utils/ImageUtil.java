@@ -3,6 +3,8 @@ package com.ruoyi.sidebarTree.utils;
 
 import net.coobird.thumbnailator.Thumbnails;
 
+import javax.imageio.ImageIO;
+import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
@@ -10,11 +12,10 @@ import java.io.IOException;
 
 public class ImageUtil {
     //图片压缩算法
-    public static void PIC_Compression(String full_path)
-    {
+    public static void PIC_Compression(String full_path) {
         try {
             Thumbnails.of(full_path)
-                    .size(300,300)
+                    .size(300, 300)
                     .toFile(full_path);
         } catch (IOException e) {
             throw new RuntimeException(e);
@@ -23,21 +24,22 @@ public class ImageUtil {
 
     /**
      * 构造略缩图
+     *
      * @param input 原图
      * @throws IOException
      */
     public static String lessFiles(String input) throws IOException {
-        String fileName=input;
-        File file =new File(fileName);
-        if(!file.exists())
-            return  input;//若不存在则返回
-        StringBuffer absoluteFile =new StringBuffer(file.getAbsoluteFile().getName());
+        String fileName = input;
+        File file = new File(fileName);
+        if (!file.exists())
+            return input;//若不存在则返回
+        StringBuffer absoluteFile = new StringBuffer(file.getAbsoluteFile().getName());
         int i = absoluteFile.lastIndexOf(".");
         System.out.println(i);
         absoluteFile.toString();
-        String srcFile =new String(file.getParent()+"\\"+absoluteFile.insert(i,2).toString());
-        File newFile =new File(srcFile);
-        if(newFile.exists())
+        String srcFile = new String(file.getParent() + "\\" + absoluteFile.insert(i, 2).toString());
+        File newFile = new File(srcFile);
+        if (newFile.exists())
             return srcFile;//如果已经存在则直接返回即可
         //1、创建一个字节输入流FileInputStream对象，绑定要读取的数据源
         try (FileInputStream fis = new FileInputStream(fileName)) {
@@ -59,4 +61,30 @@ public class ImageUtil {
     }
 
 
+    /**
+     * @param input 输入文件jepg
+     * @param output 输出png文件
+     */
+    public static void JPEGtoPNGConverter(String input,String output) {
+        // 设置JPEG文件路径
+        File inputFile = new File(input);
+
+        // 设置输出PNG文件路径
+        File outputFile = new File(output);
+
+        try {
+            // 读取JPEG文件
+            BufferedImage image = ImageIO.read(inputFile);
+
+            // 将JPEG文件写入PNG文件
+            ImageIO.write(image, "png", outputFile);
+
+            inputFile.delete();
+            System.out.println("JPEG文件已成功转换为PNG文件。");
+        } catch (IOException e) {
+            System.out.println("无法将JPEG文件转换为PNG文件。");
+            e.printStackTrace();
+        }
+    }
 }
+

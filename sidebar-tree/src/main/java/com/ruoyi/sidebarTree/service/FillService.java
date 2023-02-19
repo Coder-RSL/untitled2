@@ -12,7 +12,7 @@ import java.util.List;
 
 public interface FillService {
 
-    public boolean upload(int treeId, MultipartFile file, int isShow);
+    public int upload(int treeId, MultipartFile file, int isShow);
 
     public boolean uploadFile(int treeId,MultipartFile file,int isShow,String description,String fileName,String dateTime);
 

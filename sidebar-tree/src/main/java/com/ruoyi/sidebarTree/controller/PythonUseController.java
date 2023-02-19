@@ -40,6 +40,12 @@ public class PythonUseController {
     public AjaxResult checkGreen(String fileUrl) {
         AjaxResult result=new AjaxResult();
         File file = new File(fileUrl);
+        if(!"png".equals(fileUrl.substring(fileUrl.lastIndexOf("."))))
+            try {
+                throw new Exception("仅支持png格式图片");
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         String filePath = file.getParent();
         String fileName = file.getName().substring(0, file.getName().lastIndexOf("."));
 
@@ -78,13 +84,19 @@ public class PythonUseController {
     public AjaxResult checkHole(String fileUrl) {
         AjaxResult result=new AjaxResult();
         File file = new File(fileUrl);
+        if(!"png".equals(fileUrl.substring(fileUrl.lastIndexOf("."))))
+            try {
+                throw new Exception("仅支持png格式图片");
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         String filePath = file.getParent();
         String fileName = file.getName().substring(0, file.getName().lastIndexOf("."));
 
         String pictureDeal = filePath + File.separator + fileName + "_detect.png";
         System.out.println(pictureDeal+"::checkHole***************");
 
-        if (new File(pictureDeal).exists()) {
+        if (new File(pictureDeal).exists()) {//如果存在则不再处理，直接返回
             try {
                 String lessPicture = ImageUtil.lessFiles(pictureDeal);//创建略缩图
                 result.put("lessPicture",lessPicture);
@@ -94,7 +106,7 @@ public class PythonUseController {
             }
             result.put("pictureDeal",pictureDeal);
             return result;
-        } else {
+        } else {//不存在处理
             PythonUse pythonUse = new PythonUse();
             pythonUse.checkHole(fileUrl);
 
@@ -119,6 +131,7 @@ public class PythonUseController {
     @GetMapping("/detectLeaf")  //叶片检测
     public AjaxResult detectLeaf(String fileUrl) throws IOException {
         File file = new File(fileUrl);
+
         String filePath = file.getParent();
         String fileName = file.getName().substring(0, file.getName().lastIndexOf("."));
         String pictureDeal = filePath + File.separator + fileName + "_seed_detect.png";
@@ -150,8 +163,10 @@ public class PythonUseController {
     public AjaxResult predictGrowPoint(int treeId){
         AjaxResult result =new AjaxResult();
         PythonUse pythonUse =new PythonUse();
+        //1. 获取待处理图片
         TreePicture treePicture = treePictureService.selectTreePictureByPictureId((long)treeId);
         Long pictureId = treePicture.getPictureId();
+        //处理图片的文件夹，以种苗图片的ID为辨识
         StringBuffer fileUrl=new StringBuffer("C:\\Users\\Administrator\\Desktop\\YOLOX-growpoint\\YOLOX_outputs\\yolox_voc_s\\vis_res\\"
                         +pictureId);
         File file =new File(fileUrl.toString());
@@ -175,6 +190,7 @@ public class PythonUseController {
             result.put("pictureDeal",fileUrl.toString());
             return result;
         }
+
         String data=pythonUse.predictGrowPoint(treePicture.getPictureUrl(),treeId);
         try {
             String lessPicture = ImageUtil.lessFiles(data);//设置略缩图
@@ -184,6 +200,7 @@ public class PythonUseController {
             e.printStackTrace();
         }
         result.put("pictureDeal",data);
+
         return result;
     }
 
@@ -196,6 +213,7 @@ public class PythonUseController {
         if(ids.length!=7)
             return  AjaxResult.error("文件数不为7，请重新选择");
         PointFile pointFile=new PointFile();
+
         pointFile.setIds(ids);
         String fileUrl = pointFileService.selectByArr(pointFile);
         if(StringUtils.isNotEmpty(fileUrl))//如果已经处理过，则返回之前的文件

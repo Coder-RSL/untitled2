@@ -55,8 +55,9 @@ public class PythonUse {
         System.out.println("fileName"+fileName);
         try {
             String[] args1 = new String[]{pythonEvn, pythonCodeDict+"\\CheckHole.py", filePath, fileName};
+            for(String str : args1) System.out.print(str+" ");
+            System.out.println();
             Process proc = Runtime.getRuntime().exec(args1);// 执行py文件
-
             BufferedReader in = new BufferedReader(new InputStreamReader(proc.getInputStream()));
             String line = null;
             while ((line = in.readLine()) != null) {
@@ -69,15 +70,35 @@ public class PythonUse {
         }
     }
 
+    public void cleanFile(File file){
+        File[] list = file.listFiles();
+        if(list.length==0){//如果长度为零则删除
+            file.delete();
+        }
+        else{
+            for (File childrenfile:list) {
+                if(childrenfile.isDirectory())
+                    cleanFile(childrenfile);//递归
+                else
+                    childrenfile.delete();//删除其他类型文件
+                }
+            }
+        file.delete();
+    }
+
+
     /**
      * 生长点预测
      * @param fileUrl
      * @return 图片链接
      */
     public String predictGrowPoint(String fileUrl,long treeId) {
+        //这方法相较比较特殊，生成的图片到特定的文件夹中，因此处理前，先把文件夹清空
+        File parentFile =new File("C:\\Users\\Administrator\\Desktop\\YOLOX-growpoint\\YOLOX_outputs\\yolox_voc_s\\vis_res");
+        cleanFile(parentFile);
+        parentFile.mkdirs();
         File file = new File(fileUrl);
-        String filePath = file.getParent();
-        String fileName = file.getName().substring(0, file.getName().lastIndexOf("."));
+
         try {
             String[] args1 = new String[]{pythonEvn,
                     "demo.py",
@@ -93,7 +114,6 @@ public class PythonUse {
                 System.out.println(line);
             }
             in.close();
-            System.out.println("***"+line+"");
             proc.waitFor();
         } catch (IOException | InterruptedException e) {
             e.printStackTrace();
@@ -111,7 +131,7 @@ public class PythonUse {
             }
         });
         //取最新修改的文件，get文件名
-        File parentFile = files[0];
+        parentFile = files[0];
         parentFile.renameTo(new File("C:\\Users\\Administrator\\Desktop\\YOLOX-growpoint\\YOLOX_outputs\\yolox_voc_s\\vis_res\\"+treeId));
         reslutUrl.append("\\"+treeId);
         File newFile =new File(reslutUrl.toString());
