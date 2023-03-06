@@ -148,10 +148,12 @@ public class PythonUse {
      *
      * @param fileUrl 需要检测的图片文件地址
      */
-    public void detectLeaf(String fileUrl) {
+    public int detectLeaf(String fileUrl) {
         File file = new File(fileUrl);
         String filePath = file.getParent();
         String fileName = file.getName().substring(0, file.getName().lastIndexOf("."));
+        File file1 = new File(filePath);
+        if(!file1.exists()) return 0;
         try {
             String[] args1 = new String[]{pythonEvn,  pythonCodeDict+ "\\DetectLeaf.py", filePath, fileName, filePath};
             Process proc = Runtime.getRuntime().exec(args1);// 执行py文件
@@ -162,9 +164,13 @@ public class PythonUse {
             }
             in.close();
             proc.waitFor();
-        } catch (IOException | InterruptedException e) {
+        } catch (IOException e){
+
+            return 0;
+        }catch (InterruptedException e){
             e.printStackTrace();
         }
+        return 1;
     }
 
 //    /**
@@ -190,7 +196,8 @@ public class PythonUse {
             in.close();
             proc.waitFor();
         } catch (IOException e) {
-            e.printStackTrace();
+//            e.printStackTrace();
+
         } catch (InterruptedException e) {
             e.printStackTrace();
         }

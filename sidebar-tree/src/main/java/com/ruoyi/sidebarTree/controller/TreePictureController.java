@@ -1,5 +1,6 @@
 package com.ruoyi.sidebarTree.controller;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import com.ruoyi.sidebarTree.domain.TreePicture;
@@ -37,6 +38,7 @@ public class TreePictureController extends BaseController
     @GetMapping("/list")
     public List<TreePicture> list(int treeId)
     {
+        Long userId = getUserId();
         return treePictureService.getTreeByTreeId(treeId);
 
     }
@@ -46,20 +48,19 @@ public class TreePictureController extends BaseController
      */
     @PostMapping("/upload")
     public AjaxResult upload(int treeId,@RequestParam("file") MultipartFile file,int isShow){
-        AjaxResult result =new AjaxResult();
         int res= fillService.upload(treeId, file, isShow);
 
         if(res==1){
-            return result.success("图片上传成功");
+            return AjaxResult.success("图片上传成功");
         }
         else if(res==0){
-            result.put("图片上传失败",200);
-            return result.error("图片上传失败");
+            return AjaxResult.error("图片上传失败");
         }
         else if(res==2){
-            return result.success("部分图片上传成功，但存在不兼容文件，请检查文件类型与格式");
+            AjaxResult result =new AjaxResult(501,"部分图片上传成功，但存在不兼容文件，请检查文件类型与格式");
+            return result;
         }
-        return result;
+        return AjaxResult.error();
     }
 
     /**

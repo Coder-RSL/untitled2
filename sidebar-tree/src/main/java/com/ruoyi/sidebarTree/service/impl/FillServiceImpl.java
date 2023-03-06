@@ -136,7 +136,15 @@ public class FillServiceImpl implements FillService {
     public  boolean uploadPic(MultipartFile file,String filename,int treeId,int isShow){
         //获取文件地址
         String filePath = getFileUrl(filename,treeId);
+
         TreePicture treePicture = new TreePicture();
+        String fileType = getFileType(filePath);
+        if(!"png".equals(fileType)){
+            String PngFilePath = filePath.substring(0, filePath.lastIndexOf(".")+1)+"png";//转换为png格式便于后续Python操作
+            System.out.println(filePath+"*");
+            ImageUtil.JPEGtoPNGConverter(filePath,PngFilePath);
+            filePath=PngFilePath;
+        }
         treePicture.setPictureUrl(filePath);
         treePicture.setIsShow(isShow);
         treePicture.setTreeId((long)treeId);
@@ -147,13 +155,6 @@ public class FillServiceImpl implements FillService {
         int i = absoluteFile.lastIndexOf(".");
         String lesspic =new String(file2.getParent()+"\\"+absoluteFile.insert(i,2).toString());
         treePicture.setLessPictureUrl(lesspic);
-
-        String fileType = getFileType(filePath);
-        if(!"png".equals(fileType)){
-            String PngFilePath = filePath.substring(0, filePath.lastIndexOf(".")+1)+"png";//转换为png格式便于后续Python操作
-            ImageUtil.JPEGtoPNGConverter(filePath,PngFilePath);
-            treePicture.setPictureUrl(PngFilePath);
-        }
 
         pictureService.insertTreePicture(treePicture);
 

@@ -41,7 +41,14 @@ public class SidebarTreeController extends BaseController
     @GetMapping("/list")
     public AjaxResult list(SidebarTree sidebarTree)
     {
-        SidebarTree sidebarTree1 = sidebarTreeService.selectAllTreeNode(sidebarTree);
+        Long userId = getUserId();
+        SidebarTree sidebarTree1;
+        if(userId!=null&&userId==1){
+            sidebarTree1 = sidebarTreeService.selectAllTreeNode(true,sidebarTree);
+        }
+        else{
+            sidebarTree1 = sidebarTreeService.selectAllTreeNode(false,sidebarTree);
+        }
         return AjaxResult.success(sidebarTree1);
     }
 
@@ -87,6 +94,8 @@ public class SidebarTreeController extends BaseController
     @PutMapping
     public AjaxResult edit(@RequestBody SidebarTree sidebarTree)
     {
+        Long treeId = sidebarTree.getTreeId();
+        if(treeId==1||treeId==2 )return AjaxResult.error("根目录不可修改");
         return toAjax(sidebarTreeService.updateSidebarTree(sidebarTree));
     }
 
@@ -98,8 +107,6 @@ public class SidebarTreeController extends BaseController
 	@DeleteMapping("/{treeIds}")
     public AjaxResult remove(@PathVariable Long[] treeIds)
     {
-        System.out.println("===============");
-        System.out.println(Arrays.toString(treeIds));
         return toAjax(sidebarTreeService.deleteSidebarTreeByTreeIds(treeIds));
     }
 }

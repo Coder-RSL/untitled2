@@ -123,7 +123,7 @@ public class PythonUseController {
 
                 return result;
             } else {
-                return AjaxResult.error("处理失败");
+                return AjaxResult.error("处理失败，图片不符合要求");
             }
         }
     }
@@ -136,14 +136,20 @@ public class PythonUseController {
         String fileName = file.getName().substring(0, file.getName().lastIndexOf("."));
         String pictureDeal = filePath + File.separator + fileName + "_seed_detect.png";
         String csvDeal = filePath + File.separator + fileName+"_detcet.csv";
+        if(!new File(csvDeal).exists()) return AjaxResult.error("不支持该类型图片");
         AjaxResult ajaxResult = new AjaxResult();
         if (new File(pictureDeal).exists() && new File(csvDeal).exists()){
             ajaxResult.put("picture",pictureDeal);
+            String lessFiles = ImageUtil.lessFiles(pictureDeal);
+            ajaxResult.put("lesspicture",lessFiles);
         }else {
             new File(pictureDeal).delete();
             new File(csvDeal).delete();
-            new PythonUse().detectLeaf(fileUrl);
+            int i = new PythonUse().detectLeaf(fileUrl);
+            if (i==0) return AjaxResult.error("不支持该类型图片");
             ajaxResult.put("picture",pictureDeal);
+            String lessFiles = ImageUtil.lessFiles(pictureDeal);
+            ajaxResult.put("lesspicture",lessFiles);
         }
         CsvReader csvReader = new CsvReader(csvDeal, ',', Charset.forName("UTF-8"));
         csvReader.readRecord();
@@ -153,6 +159,7 @@ public class PythonUseController {
         ajaxResult.put("弱苗位置",csvReader.get(3));
         ajaxResult.put("无苗位置",csvReader.get(4));
         ajaxResult.put("补苗量",csvReader.get(5));
+
         return ajaxResult;
     }
 

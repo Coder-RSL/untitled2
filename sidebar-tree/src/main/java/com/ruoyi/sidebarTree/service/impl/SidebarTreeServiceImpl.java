@@ -67,6 +67,7 @@ public class SidebarTreeServiceImpl implements ISidebarTreeService
     @Override
     public int updateSidebarTree(SidebarTree sidebarTree)
     {
+
         return sidebarTreeMapper.updateSidebarTree(sidebarTree);
     }
 
@@ -79,6 +80,15 @@ public class SidebarTreeServiceImpl implements ISidebarTreeService
     @Override
     public int deleteSidebarTreeByTreeIds(Long[] treeIds)
     {
+        for(Long id:treeIds){
+            if(id==1&&id==2){
+                try {
+                    throw new Exception("禁止删除父节点");
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        }
         return sidebarTreeMapper.deleteSidebarTreeByTreeIds(treeIds);
     }
 
@@ -114,7 +124,6 @@ public class SidebarTreeServiceImpl implements ISidebarTreeService
     @Override
     public List<SidebarTree> selectTreeList(SidebarTree tree) {
         tree.setParentId(0L);
-        System.out.println(tree);
         return sidebarTreeMapper.selectSidebarTreeList(tree);
     }
 
@@ -123,26 +132,40 @@ public class SidebarTreeServiceImpl implements ISidebarTreeService
      * @return 返回的所有节点
      */
     @Override
-    public SidebarTree selectAllTreeNode(SidebarTree tree) {
+    public SidebarTree selectAllTreeNode(boolean isAdmin,SidebarTree tree) {
         List<SidebarTree> trees = selectTreeList(tree);
         tree.setChildren(trees);
-        recursionAllNodes(tree, trees,tree.getTreeType());
+
+        recursionAllNodes(isAdmin,tree, trees,tree.getTreeType());
+
         return tree;
     }
 
     @Override
-    public SidebarTree recursionAllNodes(SidebarTree tree,List<SidebarTree> nextNode,int treeType) {
+    public SidebarTree recursionAllNodes(boolean isAdmin, SidebarTree tree,List<SidebarTree> nextNode,int treeType) {
+        //递归
         if(nextNode.size()==0){
             return null;
         }
 
         for (int i = 0; i < nextNode.size(); i++) {
-            List<SidebarTree> trees = sidebarTreeMapper.selectTreeNodeByParentId(nextNode.get(i).getTreeId(),treeType);
-            nextNode.get(i).setChildren(trees);
-            recursionAllNodes(nextNode.get(i), trees,treeType);
+            List<SidebarTree> trees = sidebarTreeMapper.selectTreeNodeByParentId(nextNode.get(i).getTreeId(),treeType);//通过父节点获取
+            System.out.println(nextNode.get(i).getTreeId());
+            for (int j=trees.size()-1;j>=0;j--) {
+                SidebarTree sidebarTree =trees.get(j);
+                if(sidebarTree.getIsShow()!=null&&sidebarTree.getIsShow().equals(0)){
+                    if(!isAdmin)
+                        trees.remove(j);
+                }
+            }
+            if(trees.size()!=0){
+                nextNode.get(i).setChildren(trees);
+                recursionAllNodes(isAdmin,nextNode.get(i), trees,treeType);
+            }
+            else{
+                return null;
+            }
         }
         return tree;
     }
-
-
 }

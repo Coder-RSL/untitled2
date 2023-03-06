@@ -2,12 +2,15 @@ package com.ruoyi.sidebarTree.service.impl;
 
 import java.util.List;
 
+import com.ruoyi.common.core.domain.model.LoginUser;
 import com.ruoyi.sidebarTree.domain.TreePicture;
 import com.ruoyi.sidebarTree.mapper.TreePictureMapper;
 import com.ruoyi.sidebarTree.service.FillService;
 import com.ruoyi.sidebarTree.service.ITreePictureService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import static com.ruoyi.common.utils.SecurityUtils.getLoginUser;
 
 /**
  * 【请填写功能名称】Service业务层处理
@@ -101,6 +104,8 @@ public class TreePictureServiceImpl implements ITreePictureService
 
     @Override
     public List<TreePicture> getTreeByTreeId(int treeId) {
+        LoginUser loginUser = getLoginUser();
+
         return treePictureMapper.selectTreeByTreeId(treeId);
     }
 }

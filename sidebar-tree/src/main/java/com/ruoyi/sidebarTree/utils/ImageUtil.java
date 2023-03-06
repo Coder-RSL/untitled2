@@ -37,7 +37,7 @@ public class ImageUtil {
         int i = absoluteFile.lastIndexOf(".");
         System.out.println(i);
         absoluteFile.toString();
-        String srcFile = new String(file.getParent() + "\\" + absoluteFile.insert(i, 2).toString());
+        String srcFile =file.getParent() + "\\" + absoluteFile.insert(i, 2).toString();
         File newFile = new File(srcFile);
         if (newFile.exists())
             return srcFile;//如果已经存在则直接返回即可
@@ -68,23 +68,10 @@ public class ImageUtil {
     public static void JPEGtoPNGConverter(String input,String output) {
         // 设置JPEG文件路径
         File inputFile = new File(input);
-
         // 设置输出PNG文件路径
         File outputFile = new File(output);
-
-        try {
-            // 读取JPEG文件
-            BufferedImage image = ImageIO.read(inputFile);
-
-            // 将JPEG文件写入PNG文件
-            ImageIO.write(image, "png", outputFile);
-
-            inputFile.delete();
-            System.out.println("JPEG文件已成功转换为PNG文件。");
-        } catch (IOException e) {
-            System.out.println("无法将JPEG文件转换为PNG文件。");
-            e.printStackTrace();
-        }
+        inputFile.renameTo(outputFile);
+        System.out.println("JPEG文件已成功转换为PNG文件。");
     }
 }
 

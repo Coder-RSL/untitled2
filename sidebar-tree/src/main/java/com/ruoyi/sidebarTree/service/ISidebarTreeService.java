@@ -81,11 +81,11 @@ public interface ISidebarTreeService
      * 查询树的所有子节点
      * @return 返回的所有节点
      */
-    public SidebarTree selectAllTreeNode(SidebarTree tree);
+    public SidebarTree selectAllTreeNode(boolean isAdmin,SidebarTree tree);
 
     /**
      * 递归所有的树节点
      * @return
      */
-    public SidebarTree recursionAllNodes(SidebarTree tree,List<SidebarTree> nextNode,int treetype);
+    public SidebarTree recursionAllNodes(boolean isAdmin,SidebarTree tree,List<SidebarTree> nextNode,int treetype);
 }

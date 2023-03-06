@@ -29,6 +29,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <include refid="selectTreePictureVo"/>
         where picture_id = #{pictureId}
     </select>
+
     <select id="selectTreeByTreeId" resultMap="TreePictureResult" parameterType="int">
         <include refid="selectTreePictureVo"/>
         where tree_id = #{treeId}
@@ -43,7 +44,6 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="isShow != null">is_show,</if>
             create_time
             ,update_time
-
         </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
             <if test="pictureUrl != null and pictureUrl != ''">#{pictureUrl},</if>
