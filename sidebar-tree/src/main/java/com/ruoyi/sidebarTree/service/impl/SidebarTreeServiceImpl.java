@@ -133,12 +133,36 @@ public class SidebarTreeServiceImpl implements ISidebarTreeService
      */
     @Override
     public SidebarTree selectAllTreeNode(boolean isAdmin,SidebarTree tree) {
-        List<SidebarTree> trees = selectTreeList(tree);
-        tree.setChildren(trees);
+//        List<SidebarTree> trees = selectTreeList(tree);//tree是条件查询
+//        //trees获得的节点是 1 or 2 的节点，更具Type来判断
+//        tree.setChildren(trees);
 
-        recursionAllNodes(isAdmin,tree, trees,tree.getTreeType());
+        tree.setTreeId(0L);
+        getChildrenNode(isAdmin,tree);
 
-        return tree;
+        return tree;//父亲节点
+    }
+
+    public void getChildrenNode(boolean isAdmin,SidebarTree tree){
+
+        List<SidebarTree> childrenTree = sidebarTreeMapper.selectTreeNodeByParentId(tree.getTreeId(), tree.getTreeType());
+
+        if(childrenTree.size()!=0){
+            //若有子节点
+            if(isAdmin!=true){
+                for(int i=childrenTree.size()-1; i>=0 ; i--){//当不是管理员时。删除isShow为0 的节点
+                    SidebarTree sidebarTree =childrenTree.get(i);
+                    if(sidebarTree.getIsShow() == 0){
+                        childrenTree.remove(sidebarTree);
+                    }
+                }
+            }
+
+            for (SidebarTree sidebarTree : childrenTree) {
+                getChildrenNode(isAdmin,sidebarTree);
+            }
+        }
+        tree.setChildren(childrenTree);
     }
 
     @Override
@@ -149,18 +173,20 @@ public class SidebarTreeServiceImpl implements ISidebarTreeService
         }
 
         for (int i = 0; i < nextNode.size(); i++) {
-            List<SidebarTree> trees = sidebarTreeMapper.selectTreeNodeByParentId(nextNode.get(i).getTreeId(),treeType);//通过父节点获取
-            System.out.println(nextNode.get(i).getTreeId());
+            List<SidebarTree> trees = sidebarTreeMapper.selectTreeNodeByParentId(nextNode.get(i).getTreeId(),treeType);
+            //通过父节点获取子节点
             for (int j=trees.size()-1;j>=0;j--) {
                 SidebarTree sidebarTree =trees.get(j);
-                if(sidebarTree.getIsShow()!=null&&sidebarTree.getIsShow().equals(0)){
+                //若不为管理员，将子节点删除不显示的节点
+                if(sidebarTree.getIsShow()!=null && sidebarTree.getIsShow()==0){
                     if(!isAdmin)
                         trees.remove(j);
                 }
             }
+
+
             if(trees.size()!=0){
                 nextNode.get(i).setChildren(trees);
-                recursionAllNodes(isAdmin,nextNode.get(i), trees,treeType);
             }
             else{
                 return null;
