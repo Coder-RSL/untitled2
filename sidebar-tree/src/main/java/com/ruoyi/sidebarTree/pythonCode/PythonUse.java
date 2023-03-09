@@ -131,6 +131,7 @@ public class PythonUse {
             }
         });
         //取最新修改的文件，get文件名
+        if(files.length==0) return null;
         parentFile = files[0];
         parentFile.renameTo(new File("C:\\Users\\Administrator\\Desktop\\YOLOX-growpoint\\YOLOX_outputs\\yolox_voc_s\\vis_res\\"+treeId));
         reslutUrl.append("\\"+treeId);

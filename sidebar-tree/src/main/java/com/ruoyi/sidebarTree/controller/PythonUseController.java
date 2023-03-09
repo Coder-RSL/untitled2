@@ -199,6 +199,7 @@ public class PythonUseController {
         }
 
         String data=pythonUse.predictGrowPoint(treePicture.getPictureUrl(),treeId);
+        if(data==null) return AjaxResult.error("图片不符合要求");
         try {
             String lessPicture = ImageUtil.lessFiles(data);//设置略缩图
             result.put("lessPicture",lessPicture);
