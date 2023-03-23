@@ -1,6 +1,7 @@
 package com.ruoyi.sidebarTree.mapper;
 
 import com.ruoyi.sidebarTree.domain.TreeFile;
+import com.ruoyi.sidebarTree.domain.vo.TreeFileVo;
 
 import java.util.List;
 
@@ -26,7 +27,7 @@ public interface TreeFileMapper
      * @param treeFile 树节点上的文件
      * @return 树节点上的文件集合
      */
-    public List<TreeFile> selectTreeFileList(TreeFile treeFile);
+    public List<TreeFile> selectTreeFileList(TreeFileVo treeFile);
 
     /**
      * 新增树节点上的文件

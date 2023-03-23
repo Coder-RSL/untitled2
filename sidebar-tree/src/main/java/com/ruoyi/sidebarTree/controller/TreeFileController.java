@@ -8,6 +8,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import com.ruoyi.common.utils.StringUtils;
 import com.ruoyi.sidebarTree.domain.TreeFile;
+import com.ruoyi.sidebarTree.domain.vo.TreeFileVo;
 import com.ruoyi.sidebarTree.service.FillService;
 import com.ruoyi.sidebarTree.service.ITreeFileService;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -40,9 +41,10 @@ public class TreeFileController extends BaseController
      * 查询树节点上的文件列表
      */
     @GetMapping("/list")
-    public TableDataInfo list(TreeFile treeFile)
+    public TableDataInfo list(TreeFileVo treeFile)
     {
         startPage();
+
         List<TreeFile> list = treeFileService.selectTreeFileList(treeFile);
         return getDataTable(list);
     }

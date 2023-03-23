@@ -3,6 +3,7 @@ package com.ruoyi.sidebarTree.service.impl;
 import java.util.List;
 
 import com.ruoyi.sidebarTree.domain.TreeFile;
+import com.ruoyi.sidebarTree.domain.vo.TreeFileVo;
 import com.ruoyi.sidebarTree.mapper.TreeFileMapper;
 import com.ruoyi.sidebarTree.service.ITreeFileService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -40,7 +41,7 @@ public class TreeFileServiceImpl implements ITreeFileService
      * @return 树节点上的文件
      */
     @Override
-    public List<TreeFile> selectTreeFileList(TreeFile treeFile)
+    public List<TreeFile> selectTreeFileList(TreeFileVo treeFile)
     {
         return treeFileMapper.selectTreeFileList(treeFile);
     }
