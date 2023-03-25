@@ -111,7 +111,7 @@ public class TreePictureServiceImpl implements ITreePictureService
             return treePictureMapper.selectTreeByTreeId(treeId);
         }
         //其他角色按上级查下级规则查数据
-        //角色加一个权重字段，越小级别越高
+        //角色加一个权重字段 越小级别越高
 
         return treePictureMapper.selectTreeByTreeId(treeId);
     }
