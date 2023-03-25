@@ -105,6 +105,13 @@ public class TreePictureServiceImpl implements ITreePictureService
     @Override
     public List<TreePicture> getTreeByTreeId(int treeId) {
         LoginUser loginUser = getLoginUser();
+        // TODO zcw 查询 上级角色(部门)可以查下级所有和自己的数据
+        //超级管理员直接返所有
+        if(loginUser.getUser().getUserId()==1){
+            return treePictureMapper.selectTreeByTreeId(treeId);
+        }
+        //其他角色按上级查下级规则查数据
+        //角色加一个权重字段，越小级别越高
 
         return treePictureMapper.selectTreeByTreeId(treeId);
     }
