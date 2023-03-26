@@ -1,13 +1,18 @@
 package com.ruoyi.sidebarTree.service.impl;
 
+import java.util.Comparator;
 import java.util.List;
 
+import com.ruoyi.common.core.domain.entity.SysRole;
 import com.ruoyi.common.core.domain.model.LoginUser;
+import com.ruoyi.common.utils.SecurityUtils;
 import com.ruoyi.sidebarTree.domain.TreePicture;
 import com.ruoyi.sidebarTree.mapper.TreePictureMapper;
 import com.ruoyi.sidebarTree.service.FillService;
 import com.ruoyi.sidebarTree.service.ITreePictureService;
+import jnr.ffi.annotations.In;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.querydsl.QSort;
 import org.springframework.stereotype.Service;
 
 import static com.ruoyi.common.utils.SecurityUtils.getLoginUser;
@@ -112,7 +117,12 @@ public class TreePictureServiceImpl implements ITreePictureService
         }
         //其他角色按上级查下级规则查数据
         //角色加一个权重字段 越小级别越高
-
+        //拿到该用户最高的角色级别
+        List<SysRole> roles = loginUser.getUser().getRoles();
+        int weight = Integer.MAX_VALUE;
+        for (SysRole role : roles) {
+            weight=Math.min(weight,role.getWeight());
+        }
         return treePictureMapper.selectTreeByTreeId(treeId);
     }
 }
