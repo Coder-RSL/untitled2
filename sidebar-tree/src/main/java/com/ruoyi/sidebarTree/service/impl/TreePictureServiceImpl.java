@@ -106,6 +106,7 @@ public class TreePictureServiceImpl implements ITreePictureService
     public List<TreePicture> getTreeByTreeId(int treeId) {
         LoginUser loginUser = getLoginUser();
 
+
         return treePictureMapper.selectTreeByTreeId(treeId);
     }
 }
