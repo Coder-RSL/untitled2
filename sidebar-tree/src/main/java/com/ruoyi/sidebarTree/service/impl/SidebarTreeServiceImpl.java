@@ -147,29 +147,6 @@ public class SidebarTreeServiceImpl implements ISidebarTreeService
         return tree;//父亲节点
     }
 
-//    public void getChildrenNode(boolean isAdmin,SidebarTree tree){
-//
-//        List<SidebarTree> childrenTree = sidebarTreeMapper.selectTreeNodeByParentId(tree.getTreeId(), tree.getTreeType());
-//
-//        if(childrenTree.size()!=0){
-//            //若有子节点
-//            if(isAdmin!=true){
-//                for(int i=childrenTree.size()-1; i>=0 ; i--){
-//                    //当不是管理员时。删除isShow为0 的节点
-//                    SidebarTree sidebarTree =childrenTree.get(i);
-//                    if(sidebarTree.getIsShow() == 0){
-//                        childrenTree.remove(sidebarTree);
-//                    }
-//                }
-//            }
-//
-//            for (SidebarTree sidebarTree : childrenTree) {
-//                getChildrenNode(isAdmin,sidebarTree);
-//            }
-//        }
-//        tree.setChildren(childrenTree);
-//    }
-
     public void getChildrenNode(boolean isAdmin,SidebarTree tree){
 
         List<SidebarTree> childrenTree = sidebarTreeMapper.selectTreeNodeByParentId(tree.getTreeId(), tree.getTreeType());
