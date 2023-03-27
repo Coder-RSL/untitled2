@@ -4,6 +4,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
 
+import com.ruoyi.common.utils.StringUtils;
 import com.ruoyi.sidebarTree.domain.SidebarTree;
 import com.ruoyi.sidebarTree.service.ISidebarTreeService;
 import com.ruoyi.sidebarTree.mapper.SidebarTreeMapper;
@@ -59,6 +60,7 @@ public class SidebarTreeServiceImpl implements ISidebarTreeService
     @Override
     public int insertSidebarTree(SidebarTree sidebarTree)
     {
+        sidebarTree.setCreateBy(getUserId().toString());
         return sidebarTreeMapper.insertSidebarTree(sidebarTree);
     }
 
@@ -71,7 +73,15 @@ public class SidebarTreeServiceImpl implements ISidebarTreeService
     @Override
     public int updateSidebarTree(SidebarTree sidebarTree)
     {
-
+        Long treeId = sidebarTree.getTreeId();
+        SidebarTree treeByTreeId = sidebarTreeMapper.selectSidebarTreeByTreeId(treeId);
+        String createBy = treeByTreeId.getCreateBy();
+        try {
+            if (!StringUtils.equals(createBy,getUserId().toString())||getUserId()!=1)
+                throw new Exception("无修改权限");
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         return sidebarTreeMapper.updateSidebarTree(sidebarTree);
     }
 
@@ -92,7 +102,16 @@ public class SidebarTreeServiceImpl implements ISidebarTreeService
                     e.printStackTrace();
                 }
             }
+            SidebarTree treeByTreeId = sidebarTreeMapper.selectSidebarTreeByTreeId(id);
+            String createBy = treeByTreeId.getCreateBy();
+            try {
+                if (!StringUtils.equals(createBy,getUserId().toString())||getUserId()!=1)
+                    throw new Exception("存在节点无删除权限");
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         }
+
         return sidebarTreeMapper.deleteSidebarTreeByTreeIds(treeIds);
     }
 

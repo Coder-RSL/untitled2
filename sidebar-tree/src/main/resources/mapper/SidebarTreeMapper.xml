@@ -10,10 +10,14 @@
         <result property="parentId" column="parent_id"/>
         <result property="isShow" column="is_show"/>
         <result property="treeType" column="tree_type"/>
+        <result property="updateTime" column="update_time"/>
+        <result property="updateBy" column="update_by"/>
+        <result property="createTime" column="create_time"/>
+        <result property="createBy" column="create_by"/>
     </resultMap>
 
     <sql id="selectSidebarTreeVo">
-        select tree_id, tree_name, parent_id, is_show, tree_type
+        select tree_id, tree_name, parent_id, is_show, tree_type,update_time,update_by,create_time,create_by
         from sidebar_tree
     </sql>
 
@@ -24,6 +28,8 @@
             <if test="parentId != null ">and parent_id = #{parentId}</if>
             <if test="isShow != null ">and is_show = #{isShow}</if>
             <if test="treeType != null">and tree_type = #{treeType}</if>
+            <if test="createBy != null and createBy != ''">and create_by=#{createBy}</if>
+            <if test="createTime != null">and create_time= #{createTime}</if>
         </where>
     </select>
 
@@ -43,13 +49,17 @@
             <if test="treeName != null and treeName != ''">tree_name,</if>
             <if test="parentId != null">parent_id,</if>
             <if test="isShow != null">is_show,</if>
-            <if test="treeType != null">tree_type</if>
+            <if test="treeType != null">tree_type,</if>
+            <if test="createBy != null and createBy != ''">create_by,</if>
+            <if test="createTime != null">create_time</if>
         </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
             <if test="treeName != null and treeName != ''">#{treeName},</if>
             <if test="parentId != null">#{parentId},</if>
             <if test="isShow != null">#{isShow},</if>
-            <if test="treeType != null">#{treeType}</if>
+            <if test="treeType != null">#{treeType},</if>
+            <if test="createBy != null and createBy != ''">#{createBy},</if>
+            <if test="createTime != null">NOW()</if>
         </trim>
     </insert>
 
@@ -59,7 +69,9 @@
             <if test="treeName != null and treeName != ''">tree_name = #{treeName},</if>
             <if test="parentId != null">parent_id = #{parentId},</if>
             <if test="isShow != null">is_show = #{isShow},</if>
-            <if test="treeType != null">tree_type = #{treeType}</if>
+            <if test="treeType != null">tree_type = #{treeType},</if>
+            <if test="updateBy != null and updateBy != ''">update_by=#{updateBy},</if>
+            <if test="updateTime != null">update_time=#{updateTime}</if>
         </trim>
         where tree_id = #{treeId}
     </update>
