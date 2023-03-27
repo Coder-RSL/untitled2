@@ -45,3 +45,8 @@ nbdist/
 !*/build/*.java
 !*/build/*.html
 !*/build/*.xml
+
+# gitignore
+.gitignore
+#个人note
+note
