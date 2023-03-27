@@ -2,12 +2,16 @@ package com.ruoyi.sidebarTree.service.impl;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.Objects;
 
 import com.ruoyi.sidebarTree.domain.SidebarTree;
 import com.ruoyi.sidebarTree.service.ISidebarTreeService;
 import com.ruoyi.sidebarTree.mapper.SidebarTreeMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import static com.ruoyi.common.utils.SecurityUtils.getLoginUser;
+import static com.ruoyi.common.utils.SecurityUtils.getUserId;
 
 
 /**
@@ -143,16 +147,40 @@ public class SidebarTreeServiceImpl implements ISidebarTreeService
         return tree;//父亲节点
     }
 
+//    public void getChildrenNode(boolean isAdmin,SidebarTree tree){
+//
+//        List<SidebarTree> childrenTree = sidebarTreeMapper.selectTreeNodeByParentId(tree.getTreeId(), tree.getTreeType());
+//
+//        if(childrenTree.size()!=0){
+//            //若有子节点
+//            if(isAdmin!=true){
+//                for(int i=childrenTree.size()-1; i>=0 ; i--){
+//                    //当不是管理员时。删除isShow为0 的节点
+//                    SidebarTree sidebarTree =childrenTree.get(i);
+//                    if(sidebarTree.getIsShow() == 0){
+//                        childrenTree.remove(sidebarTree);
+//                    }
+//                }
+//            }
+//
+//            for (SidebarTree sidebarTree : childrenTree) {
+//                getChildrenNode(isAdmin,sidebarTree);
+//            }
+//        }
+//        tree.setChildren(childrenTree);
+//    }
+
     public void getChildrenNode(boolean isAdmin,SidebarTree tree){
 
         List<SidebarTree> childrenTree = sidebarTreeMapper.selectTreeNodeByParentId(tree.getTreeId(), tree.getTreeType());
 
         if(childrenTree.size()!=0){
             //若有子节点
-            if(isAdmin!=true){
-                for(int i=childrenTree.size()-1; i>=0 ; i--){//当不是管理员时。删除isShow为0 的节点
+            if(!isAdmin){
+                for(int i=childrenTree.size()-1; i>=0 ; i--){
+                    // 当不是管理员时。删除isShow为0且创建者不是自己的节点
                     SidebarTree sidebarTree =childrenTree.get(i);
-                    if(sidebarTree.getIsShow() == 0){
+                    if(sidebarTree.getIsShow() == 0&& !Objects.equals(sidebarTree.getCreateBy(), getLoginUser().getUsername())){
                         childrenTree.remove(sidebarTree);
                     }
                 }
