@@ -1,12 +1,13 @@
 package com.ruoyi.sidebarTree.domain.vo;
 
 import com.ruoyi.common.annotation.Excel;
+import com.ruoyi.common.core.domain.BaseEntity;
 import com.ruoyi.sidebarTree.domain.SidebarTree;
 import com.ruoyi.sidebarTree.domain.TreeFile;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
-public class TreeFileVo {
+public class TreeFileVo extends BaseEntity {
     private static final long serialVersionUID = 1L;
 
     /** 树文件id */

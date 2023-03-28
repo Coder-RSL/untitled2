@@ -12,10 +12,14 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <result property="fileStatus"    column="file_status"    />
         <result property="fileName"    column="file_name"    />
         <result property="dateTime" column="date_time" />
+        <result property="createTime" column="create_time" />
+        <result property="createBy" column="create_by" />
+        <result property="updateBy" column="create_by" />
+        <result property="updateTime" column="update_time" />
     </resultMap>
 
     <sql id="selectTreeFileVo">
-        select file_id, file_url, tree_id, description, file_status, file_name, date_time from tree_file
+        select file_id, file_url, tree_id, description, file_status, file_name, date_time ,update_time,update_by,create_by,create_time from tree_file
     </sql>
 
     <select id="getFile" parameterType="Integer" resultMap="TreeFileResult">
@@ -32,6 +36,8 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="description != null  and description != ''"> and description = #{description}</if>
             <if test="fileStatus != null "> and file_status = #{fileStatus}</if>
             <if test="fileName != null  and fileName != ''"> and file_name like concat('%', #{fileName}, '%')</if>
+            <if test="createBy != null and createBy != ''">and create_by=#{createBy}</if>
+            <if test="createTime != null">and create_time= #{createTime}</if>
         </where>
     </select>
 
@@ -60,6 +66,8 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="fileStatus != null">file_status,</if>
             <if test="fileName != null and fileName != ''">file_name,</if>
             <if test="dateTime != null and dateTime != ''">date_time,</if>
+            <if test="createBy != null and createBy != ''">create_by,</if>
+            <if test="createTime != null">create_time</if>
          </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
             <if test="fileUrl != null and fileUrl != ''">#{fileUrl},</if>
@@ -68,6 +76,8 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="fileStatus != null">#{fileStatus},</if>
             <if test="fileName != null and fileName != ''">#{fileName},</if>
             <if test="dateTime != null and dateTime != ''">#{dateTime},</if>
+            <if test="createBy != null and createBy != ''">#{createBy},</if>
+            <if test="createTime != null">NOW()</if>
          </trim>
     </insert>
 
@@ -80,6 +90,8 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="fileStatus != null">file_status = #{fileStatus},</if>
             <if test="fileName != null and fileName != ''">file_name = #{fileName},</if>
             <if test="dateTime != null and dateTime != ''">date_time = #{dateTime},</if>
+            <if test="updateBy != null and updateBy != ''">update_by=#{updateBy},</if>
+            <if test="updateTime != null">update_time=#{updateTime}</if>
         </trim>
         where file_id = #{fileId}
     </update>

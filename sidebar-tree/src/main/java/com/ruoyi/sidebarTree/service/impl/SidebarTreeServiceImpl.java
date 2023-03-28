@@ -77,8 +77,8 @@ public class SidebarTreeServiceImpl implements ISidebarTreeService
         SidebarTree treeByTreeId = sidebarTreeMapper.selectSidebarTreeByTreeId(treeId);
         String createBy = treeByTreeId.getCreateBy();
         try {
-            if (!StringUtils.equals(createBy,getUserId().toString())||getUserId()!=1)
-                throw new Exception("无修改权限");
+            if (!StringUtils.equals(createBy,getUserId().toString())&&getUserId()!=1)
+                return -1;
         } catch (Exception e) {
             e.printStackTrace();
         }

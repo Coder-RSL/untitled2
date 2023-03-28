@@ -96,7 +96,9 @@ public class SidebarTreeController extends BaseController
     {
         Long treeId = sidebarTree.getTreeId();
         if(treeId==1||treeId==2 )return AjaxResult.error("根目录不可修改");
-        return toAjax(sidebarTreeService.updateSidebarTree(sidebarTree));
+        int i = sidebarTreeService.updateSidebarTree(sidebarTree);
+        if(i==-1) return AjaxResult.error("修改失败，无修改权限");
+        return toAjax(i);
     }
 
     /**
