@@ -71,7 +71,7 @@
             <if test="isShow != null">is_show = #{isShow},</if>
             <if test="treeType != null">tree_type = #{treeType},</if>
             <if test="updateBy != null and updateBy != ''">update_by=#{updateBy},</if>
-            <if test="updateTime != null">update_time=#{updateTime}</if>
+            <if test="updateTime != null">update_time=now()</if>
         </trim>
         where tree_id = #{treeId}
     </update>

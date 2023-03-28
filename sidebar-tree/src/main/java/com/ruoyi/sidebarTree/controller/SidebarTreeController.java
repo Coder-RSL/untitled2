@@ -52,6 +52,16 @@ public class SidebarTreeController extends BaseController
         return AjaxResult.success(sidebarTree1);
     }
 
+    @GetMapping("/listForUserKind")//展示品种给普通用户
+    public AjaxResult listForUserKind()
+    {
+        SidebarTree sidebarTree =new SidebarTree();
+        sidebarTree.setTreeId(1L);
+        SidebarTree sidebarTree1 = sidebarTreeService.selectAllTreeNode(false,sidebarTree);
+
+        return AjaxResult.success(sidebarTree1);
+    }
+
     /**
      * 导出侧边栏树的列表
      */
