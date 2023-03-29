@@ -78,7 +78,7 @@ public class SidebarTreeController extends BaseController
     /**
      * 获取侧边栏树的详细信息
      */
-    @PreAuthorize("@ss.hasPermi('system:tree:query')")
+//    @PreAuthorize("@ss.hasPermi('system:tree:query')")
     @GetMapping(value = "/{treeId}")
     public AjaxResult getInfo(@PathVariable("treeId") Long treeId)
     {
@@ -88,7 +88,7 @@ public class SidebarTreeController extends BaseController
     /**
      * 新增侧边栏树的
      */
-//    @PreAuthorize("@ss.hasPermi('system:tree:add')")
+    @PreAuthorize("@ss.hasPermi('system:tree:add')")
     @Log(title = "侧边栏树的", businessType = BusinessType.INSERT)
     @PostMapping
     public AjaxResult add(@RequestBody SidebarTree sidebarTree)
@@ -99,7 +99,7 @@ public class SidebarTreeController extends BaseController
     /**
      * 修改侧边栏树的
      */
-//    @PreAuthorize("@ss.hasPermi('system:tree:edit')")
+    @PreAuthorize("@ss.hasPermi('system:tree:edit')")
     @Log(title = "侧边栏树的", businessType = BusinessType.UPDATE)
     @PutMapping
     public AjaxResult edit(@RequestBody SidebarTree sidebarTree)
@@ -114,7 +114,7 @@ public class SidebarTreeController extends BaseController
     /**
      * 删除侧边栏树的
      */
-//    @PreAuthorize("@ss.hasPermi('system:tree:remove')")
+    @PreAuthorize("@ss.hasPermi('system:tree:remove')")
     @Log(title = "侧边栏树的", businessType = BusinessType.DELETE)
 	@DeleteMapping("/{treeIds}")
     public AjaxResult remove(@PathVariable Long[] treeIds)
