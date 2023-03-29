@@ -54,8 +54,7 @@
             <if test="parentId != null">parent_id,</if>
             <if test="isShow != null">is_show,</if>
             <if test="treeType != null">tree_type,</if>
-            <if test="createBy != null and createBy != ''">create_by,</if>
-            <if test="createTime != null">create_time</if>
+            <if test="createBy != null and createBy != ''">create_by,create_time</if>
         </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
             <if test="treeName != null and treeName != ''">#{treeName},</if>
