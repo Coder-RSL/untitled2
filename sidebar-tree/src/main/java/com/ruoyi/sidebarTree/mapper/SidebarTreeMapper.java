@@ -68,4 +68,6 @@ public interface SidebarTreeMapper
      * @return 返回对应的子节点
      */
     public List<SidebarTree> selectTreeNodeByParentId(@Param("parentId") Long parentId,@Param("treeType") int treeType);
+
+    public List<Long> selectAllParentTreeId();
 }

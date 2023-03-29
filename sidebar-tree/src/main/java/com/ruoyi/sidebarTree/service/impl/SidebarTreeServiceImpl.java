@@ -82,6 +82,7 @@ public class SidebarTreeServiceImpl implements ISidebarTreeService
         } catch (Exception e) {
             e.printStackTrace();
         }
+        sidebarTree.setUpdateBy(createBy);
         return sidebarTreeMapper.updateSidebarTree(sidebarTree);
     }
 
@@ -94,8 +95,9 @@ public class SidebarTreeServiceImpl implements ISidebarTreeService
     @Override
     public int deleteSidebarTreeByTreeIds(Long[] treeIds)
     {
+        List<Long> parentTreeId = sidebarTreeMapper.selectAllParentTreeId();
         for(Long id:treeIds){
-            if(id==1&&id==2){
+            if(parentTreeId.contains(id)||Objects.equals(id,0L)){
                 try {
                     throw new Exception("禁止删除父节点");
                 } catch (Exception e) {
@@ -166,6 +168,12 @@ public class SidebarTreeServiceImpl implements ISidebarTreeService
         return tree;//父亲节点
     }
 
+    /**
+     * 获取子节点
+     *
+     * @param isAdmin 管理员
+     * @param tree    侧边栏树
+     */
     public void getChildrenNode(boolean isAdmin,SidebarTree tree){
 
         List<SidebarTree> childrenTree = sidebarTreeMapper.selectTreeNodeByParentId(tree.getTreeId(), tree.getTreeType());

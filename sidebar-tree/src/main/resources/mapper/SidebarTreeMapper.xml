@@ -43,6 +43,10 @@
         where parent_id = #{parentId} and  tree_type = #{treeType}
     </select>
 
+    <select id="selectAllParentTreeId" resultType="java.lang.Long">
+        select parent_id from sidebar_tree where parent_id = 0;
+    </select>
+
     <insert id="insertSidebarTree" parameterType="SidebarTree" useGeneratedKeys="true" keyProperty="treeId">
         insert into sidebar_tree
         <trim prefix="(" suffix=")" suffixOverrides=",">
@@ -58,8 +62,7 @@
             <if test="parentId != null">#{parentId},</if>
             <if test="isShow != null">#{isShow},</if>
             <if test="treeType != null">#{treeType},</if>
-            <if test="createBy != null and createBy != ''">#{createBy},</if>
-            <if test="createTime != null">NOW()</if>
+            <if test="createBy != null and createBy != ''">#{createBy},NOW()</if>
         </trim>
     </insert>
 
@@ -70,8 +73,7 @@
             <if test="parentId != null">parent_id = #{parentId},</if>
             <if test="isShow != null">is_show = #{isShow},</if>
             <if test="treeType != null">tree_type = #{treeType},</if>
-            <if test="updateBy != null and updateBy != ''">update_by=#{updateBy},</if>
-            <if test="updateTime != null">update_time=now()</if>
+            <if test="updateBy != null and updateBy != ''">update_by=#{updateBy},update_time=NOW()</if>
         </trim>
         where tree_id = #{treeId}
     </update>
