@@ -30,14 +30,14 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     <select id="selectTreeFileList" parameterType="TreeFile" resultMap="TreeFileResult">
         <include refid="selectTreeFileVo"/>
         <where>
-            <if test="fileId !=null">and file_id = #{fileId}</if>
+            <if test="fileId != null and fileId != ''">and file_id = #{fileId}</if>
             <if test="fileUrl != null  and fileUrl != ''"> and file_url = #{fileUrl}</if>
             <if test="treeId != null "> and tree_id = #{treeId}</if>
             <if test="description != null  and description != ''"> and description = #{description}</if>
-            <if test="fileStatus != null "> and file_status = #{fileStatus}</if>
+            <if test="fileStatus != null and fileStatus != ''"> and file_status = #{fileStatus}</if>
             <if test="fileName != null  and fileName != ''"> and file_name like concat('%', #{fileName}, '%')</if>
             <if test="createBy != null and createBy != ''">and create_by=#{createBy}</if>
-            <if test="createTime != null">and create_time= #{createTime}</if>
+            <if test="createTime != null and createTime != ''">and create_time= #{createTime}</if>
         </where>
     </select>
 
