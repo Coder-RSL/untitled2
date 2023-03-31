@@ -2,6 +2,7 @@ package com.ruoyi.sidebarTree.service.impl;
 
 import com.csvreader.CsvReader;
 import com.csvreader.CsvWriter;
+import com.ruoyi.common.utils.SecurityUtils;
 import com.ruoyi.sidebarTree.domain.TreeFile;
 import com.ruoyi.sidebarTree.domain.TreePicture;
 import com.ruoyi.sidebarTree.mapper.TreeFileMapper;
@@ -28,6 +29,8 @@ import java.nio.charset.Charset;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
+
+import static com.ruoyi.common.utils.SecurityUtils.getUserId;
 
 /**
  * Author jia wei
@@ -156,6 +159,7 @@ public class FillServiceImpl implements FillService {
         String lesspic =new String(file2.getParent()+"\\"+absoluteFile.insert(i,2).toString());
         treePicture.setLessPictureUrl(lesspic);
 
+        treePicture.setCreateBy(getUserId().toString());
         pictureService.insertTreePicture(treePicture);
 
         File loadFile = new File(filePath);
@@ -218,6 +222,7 @@ public class FillServiceImpl implements FillService {
                 treeFile.setFileStatus(isShow);
                 treeFile.setTreeId((long)treeId);
                 treeFile.setDateTime(dateTime);
+                treeFile.setCreateBy(getUserId().toString());
                 fileMapper.insertTreeFile(treeFile);
                 File loadFile = new File(filePath);
                 try {

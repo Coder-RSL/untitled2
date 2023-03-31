@@ -66,8 +66,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="fileStatus != null">file_status,</if>
             <if test="fileName != null and fileName != ''">file_name,</if>
             <if test="dateTime != null and dateTime != ''">date_time,</if>
-            <if test="createBy != null and createBy != ''">create_by,</if>
-            <if test="createTime != null">create_time</if>
+            <if test="createBy != null and createBy != ''">create_by,create_time</if>
          </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
             <if test="fileUrl != null and fileUrl != ''">#{fileUrl},</if>
@@ -76,8 +75,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="fileStatus != null">#{fileStatus},</if>
             <if test="fileName != null and fileName != ''">#{fileName},</if>
             <if test="dateTime != null and dateTime != ''">#{dateTime},</if>
-            <if test="createBy != null and createBy != ''">#{createBy},</if>
-            <if test="createTime != null">NOW()</if>
+            <if test="createBy != null and createBy != ''">#{createBy},NOW()</if>
          </trim>
     </insert>
 
@@ -90,8 +88,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="fileStatus != null">file_status = #{fileStatus},</if>
             <if test="fileName != null and fileName != ''">file_name = #{fileName},</if>
             <if test="dateTime != null and dateTime != ''">date_time = #{dateTime},</if>
-            <if test="updateBy != null and updateBy != ''">update_by=#{updateBy},</if>
-            <if test="updateTime != null">update_time=#{updateTime}</if>
+            <if test="updateBy != null and updateBy != ''">update_by=#{updateBy},update_time=NOW()</if>
         </trim>
         where file_id = #{fileId}
     </update>

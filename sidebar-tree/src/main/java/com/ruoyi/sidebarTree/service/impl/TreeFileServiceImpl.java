@@ -9,6 +9,9 @@ import com.ruoyi.sidebarTree.service.ITreeFileService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import static com.ruoyi.common.utils.SecurityUtils.getUserId;
+import static com.ruoyi.common.utils.SecurityUtils.getUsername;
+
 
 /**
  * 树节点上的文件Service业务层处理
@@ -55,6 +58,7 @@ public class TreeFileServiceImpl implements ITreeFileService
     @Override
     public int insertTreeFile(TreeFile treeFile)
     {
+        treeFile.setCreateBy(getUserId().toString());
         return treeFileMapper.insertTreeFile(treeFile);
     }
 
@@ -67,6 +71,7 @@ public class TreeFileServiceImpl implements ITreeFileService
     @Override
     public int updateTreeFile(TreeFile treeFile)
     {
+        treeFile.setUpdateBy(getUserId().toString());
         return treeFileMapper.updateTreeFile(treeFile);
     }
 

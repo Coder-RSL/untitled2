@@ -42,15 +42,14 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="lessPictureUrl != null and lessPictureUrl != ''">less_picture_url,</if>
             <if test="treeId != null">tree_id,</if>
             <if test="isShow != null">is_show,</if>
-            create_time
-            ,update_time
+            <if test="createBy != null">create_by,create_time</if>
         </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
             <if test="pictureUrl != null and pictureUrl != ''">#{pictureUrl},</if>
             <if test="lessPictureUrl != null and lessPictureUrl != ''">#{lessPictureUrl},</if>
             <if test="treeId != null">#{treeId},</if>
             <if test="isShow != null">#{isShow},</if>
-            current_time,current_time
+            <if test="createBy != null">#{createBy},NOW()</if>
          </trim>
     </insert>
 
