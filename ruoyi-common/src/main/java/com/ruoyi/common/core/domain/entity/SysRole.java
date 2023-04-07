@@ -59,6 +59,10 @@ public class SysRole extends BaseEntity
     /** 部门组（数据权限） */
     private Long[] deptIds;
 
+//    /** 权重 越低表示等级越高 */
+//    @Excel(name = "角色权重")
+//    private Integer weight;
+
     public SysRole()
     {
 
@@ -203,7 +207,15 @@ public class SysRole extends BaseEntity
     {
         this.deptIds = deptIds;
     }
-
+//
+//    public int getWeight() {
+//        return weight;
+//    }
+//
+//    public void setWeight(int weight) {
+//        this.weight = weight;
+//    }
+    
     @Override
     public String toString() {
         return new ToStringBuilder(this,ToStringStyle.MULTI_LINE_STYLE)
@@ -221,6 +233,7 @@ public class SysRole extends BaseEntity
             .append("updateBy", getUpdateBy())
             .append("updateTime", getUpdateTime())
             .append("remark", getRemark())
+//            .append("weight", getWeight())
             .toString();
     }
 }

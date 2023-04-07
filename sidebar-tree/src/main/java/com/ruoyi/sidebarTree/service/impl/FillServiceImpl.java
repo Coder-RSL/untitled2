@@ -83,6 +83,8 @@ public class FillServiceImpl implements FillService {
         } else return 0;
     }
 
+
+
     //判断文件类型
     public  String getFileType(String filename){
         return filename.substring(filename.lastIndexOf(".")+1,filename.length());
@@ -151,7 +153,7 @@ public class FillServiceImpl implements FillService {
         treePicture.setPictureUrl(filePath);
         treePicture.setIsShow(isShow);
         treePicture.setTreeId((long)treeId);
-        //创建压缩图
+        //创建略缩图
         String pictureUrl = treePicture.getPictureUrl();
         File file2 =new File(pictureUrl);
         StringBuffer absoluteFile =new StringBuffer(file2.getAbsoluteFile().getName());
@@ -159,7 +161,8 @@ public class FillServiceImpl implements FillService {
         String lesspic =new String(file2.getParent()+"\\"+absoluteFile.insert(i,2).toString());
         treePicture.setLessPictureUrl(lesspic);
 
-        treePicture.setCreateBy(getUserId().toString());
+        try{
+        treePicture.setCreateBy(getUserId().toString());}catch (Exception e ){}
         pictureService.insertTreePicture(treePicture);
 
         File loadFile = new File(filePath);

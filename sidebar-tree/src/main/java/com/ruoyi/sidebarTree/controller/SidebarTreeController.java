@@ -52,11 +52,12 @@ public class SidebarTreeController extends BaseController
         return AjaxResult.success(sidebarTree1);
     }
 
-    @GetMapping("/listForUserKind")//展示品种给普通用户
+    @GetMapping("/listForUserKind")//展示种苗图片给普通用户
     public AjaxResult listForUserKind()
     {
         SidebarTree sidebarTree =new SidebarTree();
         sidebarTree.setTreeId(1L);
+        sidebarTree.setTreeType(2);
         SidebarTree sidebarTree1 = sidebarTreeService.selectAllTreeNode(false,sidebarTree);
 
         return AjaxResult.success(sidebarTree1);
