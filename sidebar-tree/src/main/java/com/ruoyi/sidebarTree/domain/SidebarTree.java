@@ -41,6 +41,12 @@ public class SidebarTree extends BaseEntity {
     @Excel(name = "是否显示，1为显示，0为不显示")
     private Integer isShow;
 
+    @Excel(name = "父目录")
+    private String parentFile;
+
+    @Excel(name = "ip地址")
+    private String ip;
+
     /**
      * 子菜单
      */
@@ -49,6 +55,22 @@ public class SidebarTree extends BaseEntity {
     /** 是哪一个树，1为种苗品种，2为种苗图片，盘穴检测和叶片检测，3为种苗表型信息和生长预测 */
     @Excel(name = "是哪一个树，1为种苗品种，2为种苗图片，盘穴检测和叶片检测，3为种苗表型信息和生长预测")
     private Integer treeType;
+
+    public String getParentFile() {
+        return parentFile;
+    }
+
+    public void setParentFile(String parentFile) {
+        this.parentFile = parentFile;
+    }
+
+    public String getIp() {
+        return ip;
+    }
+
+    public void setIp(String ip) {
+        this.ip = ip;
+    }
 
     public void setTreeId(Long treeId) {
         this.treeId = treeId;
@@ -103,6 +125,8 @@ public class SidebarTree extends BaseEntity {
                 .append("parentId", getParentId())
                 .append("isShow", getIsShow())
                 .append("treeType", getTreeType())
+                .append("parentFile",getParentFile())
+                .append("ip",getIp())
                 .toString();
     }
 }

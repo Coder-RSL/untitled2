@@ -4,12 +4,14 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.ruoyi.sidebarTree.mapper.SidebarTreeMapper">
 
-    <resultMap type="SidebarTree" id="SidebarTreeResult">
+    <resultMap type="com.ruoyi.sidebarTree.domain.SidebarTree" id="SidebarTreeResult">
         <result property="treeId" column="tree_id"/>
         <result property="treeName" column="tree_name"/>
         <result property="parentId" column="parent_id"/>
         <result property="isShow" column="is_show"/>
         <result property="treeType" column="tree_type"/>
+        <result property="ip" column="ip"/>
+        <result property="parentFile" column="parent_file"/>
         <result property="updateTime" column="update_time"/>
         <result property="updateBy" column="update_by"/>
         <result property="createTime" column="create_time"/>
@@ -17,11 +19,11 @@
     </resultMap>
 
     <sql id="selectSidebarTreeVo">
-        select tree_id, tree_name, parent_id, is_show, tree_type,update_time,update_by,create_time,create_by
-        from sidebar_tree
+        select tree_id, tree_name, parent_id, is_show, ip,parent_file,tree_type,update_time,update_by,create_time,create_by
+        from ruoyi.sidebar_tree
     </sql>
 
-    <select id="selectSidebarTreeList" parameterType="SidebarTree" resultMap="SidebarTreeResult">
+    <select id="selectSidebarTreeList" parameterType="com.ruoyi.sidebarTree.domain.SidebarTree" resultMap="SidebarTreeResult">
         <include refid="selectSidebarTreeVo"/>
         <where>
             <if test="treeName != null  and treeName != ''">and tree_name like concat('%', #{treeName}, '%')</if>
@@ -30,6 +32,8 @@
             <if test="treeType != null">and tree_type = #{treeType}</if>
             <if test="createBy != null and createBy != ''">and create_by=#{createBy}</if>
             <if test="createTime != null">and create_time= #{createTime}</if>
+            <if test="ip != null">and ip=#{ip}</if>
+            <if test="parentFile != null and parentFile != ''">and parent_file=#{parentFile}</if>
         </where>
     </select>
 
@@ -44,12 +48,14 @@
     </select>
 
     <select id="selectAllParentTreeId" resultType="java.lang.Long">
-        select parent_id from sidebar_tree where parent_id = 0;
+        select parent_id from ruoyi.sidebar_tree where parent_id = 0;
     </select>
 
-    <insert id="insertSidebarTree" parameterType="SidebarTree" useGeneratedKeys="true" keyProperty="treeId">
-        insert into sidebar_tree
+    <insert id="insertSidebarTree" parameterType="com.ruoyi.sidebarTree.domain.SidebarTree" useGeneratedKeys="true" keyProperty="treeId">
+        insert into ruoyi.sidebar_tree
         <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="ip != null">ip,</if>
+            <if test="parentFile != null and parentFile != ''">parent_file,</if>
             <if test="treeName != null and treeName != ''">tree_name,</if>
             <if test="parentId != null">parent_id,</if>
             <if test="isShow != null">is_show,</if>
@@ -57,6 +63,8 @@
             <if test="createBy != null and createBy != ''">create_by,create_time</if>
         </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="ip != null">#{ip},</if>
+            <if test="parentFile != null and parentFile != ''">#{parentFile},</if>
             <if test="treeName != null and treeName != ''">#{treeName},</if>
             <if test="parentId != null">#{parentId},</if>
             <if test="isShow != null">#{isShow},</if>
@@ -65,13 +73,15 @@
         </trim>
     </insert>
 
-    <update id="updateSidebarTree" parameterType="SidebarTree">
-        update sidebar_tree
+    <update id="updateSidebarTree" parameterType="com.ruoyi.sidebarTree.domain.SidebarTree">
+        update ruoyi.sidebar_tree
         <trim prefix="SET" suffixOverrides=",">
             <if test="treeName != null and treeName != ''">tree_name = #{treeName},</if>
             <if test="parentId != null">parent_id = #{parentId},</if>
             <if test="isShow != null">is_show = #{isShow},</if>
             <if test="treeType != null">tree_type = #{treeType},</if>
+            <if test="ip != null">ip=#{ip},</if>
+            <if test="parentFile != null and parentFile != ''">parent_file=#{parentFile},</if>
             <if test="updateBy != null and updateBy != ''">update_by=#{updateBy},update_time=NOW()</if>
         </trim>
         where tree_id = #{treeId}
@@ -79,12 +89,12 @@
 
     <delete id="deleteSidebarTreeByTreeId" parameterType="Long">
         delete
-        from sidebar_tree
+        from ruoyi.sidebar_tree
         where tree_id = #{treeId}
     </delete>
 
     <delete id="deleteSidebarTreeByTreeIds" parameterType="String">
-        delete from sidebar_tree where tree_id in
+        delete from ruoyi.sidebar_tree where tree_id in
         <foreach item="treeId" collection="array" open="(" separator="," close=")">
             #{treeId}
         </foreach>
