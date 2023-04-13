@@ -12,6 +12,10 @@
         <result property="treeType" column="tree_type"/>
         <result property="ip" column="ip"/>
         <result property="parentFile" column="parent_file"/>
+        <result property="shootEqmt" column="shoot_eqmt"/>
+        <result property="shootTime" column="shoot_time"/>
+        <result property="keyword" column="keyword"/>
+        <result property="procMeth" column="proc_meth"/>
         <result property="updateTime" column="update_time"/>
         <result property="updateBy" column="update_by"/>
         <result property="createTime" column="create_time"/>
@@ -19,7 +23,7 @@
     </resultMap>
 
     <sql id="selectSidebarTreeVo">
-        select tree_id, tree_name, parent_id, is_show, ip,parent_file,tree_type,update_time,update_by,create_time,create_by
+        select tree_id, tree_name, parent_id, is_show, ip,parent_file,tree_type,shoot_eqmt,shoot_time,keyword,proc_meth, update_time,update_by,create_time,create_by
         from ruoyi.sidebar_tree
     </sql>
 
@@ -27,6 +31,10 @@
         <include refid="selectSidebarTreeVo"/>
         <where>
             <if test="treeName != null  and treeName != ''">and tree_name like concat('%', #{treeName}, '%')</if>
+            <if test="keyword != null  and keyword != ''">and sidebar_tree.keyword like concat('%', #{keyword}, '%')</if>
+            <if test="procMeth != null  and procMeth != ''">and sidebar_tree.proc_meth like concat('%', #{procMeth}, '%')</if>
+            <if test="shootEqmt != null  and shootEqmt != ''">and sidebar_tree.shoot_eqmt like concat('%', #{shootEqmt}, '%')</if>
+            <if test="shootTime != null and shootTime != ''">and date_format(sidebar_tree.shoot_time, '%Y-%m-%d') = #{shootTime}</if>
             <if test="parentId != null ">and parent_id = #{parentId}</if>
             <if test="isShow != null ">and is_show = #{isShow}</if>
             <if test="treeType != null">and tree_type = #{treeType}</if>
@@ -60,6 +68,10 @@
             <if test="parentId != null">parent_id,</if>
             <if test="isShow != null">is_show,</if>
             <if test="treeType != null">tree_type,</if>
+            <if test="shootTime!=null and shootTime!=''">shoot_time,</if>
+            <if test="shootEqmt!=null and shootEqmt!=''">shoot_eqmt,</if>
+            <if test="procMeth!=null and procMeth!=''">proc_meth,</if>
+            <if test="keyword!=null and keyword!=''">keyword,</if>
             <if test="createBy != null and createBy != ''">create_by,create_time</if>
         </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
@@ -69,6 +81,10 @@
             <if test="parentId != null">#{parentId},</if>
             <if test="isShow != null">#{isShow},</if>
             <if test="treeType != null">#{treeType},</if>
+            <if test="shootTime!=null and shootTime!=''">#{shootTime},</if>
+            <if test="shootEqmt!=null and shootEqmt!=''">#{shootEqmt},</if>
+            <if test="procMeth!=null and procMeth!=''">#{procMeth},</if>
+            <if test="keyword!=null and keyword!=''">#{keyword},</if>
             <if test="createBy != null and createBy != ''">#{createBy},NOW()</if>
         </trim>
     </insert>
@@ -82,6 +98,10 @@
             <if test="treeType != null">tree_type = #{treeType},</if>
             <if test="ip != null">ip=#{ip},</if>
             <if test="parentFile != null and parentFile != ''">parent_file=#{parentFile},</if>
+            <if test="shootTime!=null and shootTime!=''">shoot_time=#{shootTime},</if>
+            <if test="shootEqmt!=null and shootEqmt!=''">shoot_eqmt=#{shootEqmt},</if>
+            <if test="procMeth!=null and procMeth!=''">proc_meth=#{procMeth},</if>
+            <if test="keyword!=null and keyword!=''">keyword=#{keyword},</if>
             <if test="updateBy != null and updateBy != ''">update_by=#{updateBy},update_time=NOW()</if>
         </trim>
         where tree_id = #{treeId}

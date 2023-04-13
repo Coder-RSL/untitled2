@@ -106,7 +106,7 @@ public class TreePictureController extends BaseController
             // 使用RestTemplate发送HTTP POST请求
             RestTemplate restTemplate = new RestTemplate();
             //flask所在
-            String url = "http://" + ip + ":9999";
+            String url = "http://" + ip + ":9999/text";
             restTemplate.postForEntity(url, request, String.class);
 //            ResponseEntity<String> response = restTemplate.postForEntity(url, request, String.class);
 //

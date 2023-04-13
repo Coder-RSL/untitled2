@@ -7,6 +7,7 @@ import com.ruoyi.common.annotation.Excel;
 import com.ruoyi.common.core.domain.BaseEntity;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -46,6 +47,15 @@ public class SidebarTree extends BaseEntity {
 
     @Excel(name = "ip地址")
     private String ip;
+
+    @Excel(name = "拍摄设备")
+    private String shootEqmt;
+    @Excel(name = "拍摄时间")
+    private Date shootTime;
+    @Excel(name = "处理方法")
+    private String procMeth;
+    @Excel(name = "关键词")
+    private String keyword;
 
     /**
      * 子菜单
@@ -117,6 +127,42 @@ public class SidebarTree extends BaseEntity {
     }
 
 
+    public static long getSerialVersionUID() {
+        return serialVersionUID;
+    }
+
+    public String getShootEqmt() {
+        return shootEqmt;
+    }
+
+    public void setShootEqmt(String shootEqmt) {
+        this.shootEqmt = shootEqmt;
+    }
+
+    public Date getShootTime() {
+        return shootTime;
+    }
+
+    public void setShootTime(Date shootTime) {
+        this.shootTime = shootTime;
+    }
+
+    public String getProcMeth() {
+        return procMeth;
+    }
+
+    public void setProcMeth(String procMeth) {
+        this.procMeth = procMeth;
+    }
+
+    public String getKeyword() {
+        return keyword;
+    }
+
+    public void setKeyword(String keyWord) {
+        this.keyword = keyword;
+    }
+
     @Override
     public String toString() {
         return new ToStringBuilder(this, ToStringStyle.MULTI_LINE_STYLE)
@@ -127,6 +173,10 @@ public class SidebarTree extends BaseEntity {
                 .append("treeType", getTreeType())
                 .append("parentFile",getParentFile())
                 .append("ip",getIp())
+                .append("shootEqmt",getShootEqmt())
+                .append("shootTime",getShootTime())
+                .append("procMeth",getProcMeth())
+                .append("keyword",getKeyword())
                 .toString();
     }
 }
