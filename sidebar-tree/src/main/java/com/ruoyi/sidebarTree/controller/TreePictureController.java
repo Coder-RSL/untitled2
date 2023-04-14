@@ -45,7 +45,10 @@ public class TreePictureController extends BaseController
     @GetMapping("/list")
     public List<TreePicture> list(int treeId)
     {
-        Long userId = getUserId();
+        try {
+            Long userId = getUserId();
+        }catch (Exception e){
+        }
         return treePictureService.getTreeByTreeId(treeId);
 
     }

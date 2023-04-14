@@ -104,8 +104,9 @@ public class TreePictureServiceImpl implements ITreePictureService
 
     @Override
     public List<TreePicture> getTreeByTreeId(int treeId) {
-        LoginUser loginUser = getLoginUser();
-
+        try {
+            LoginUser loginUser = getLoginUser();
+        }catch (Exception e){}
 
         return treePictureMapper.selectTreeByTreeId(treeId);
     }
