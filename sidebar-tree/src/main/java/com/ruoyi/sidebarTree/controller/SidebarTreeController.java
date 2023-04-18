@@ -41,9 +41,13 @@ public class SidebarTreeController extends BaseController
     @GetMapping("/list")
     public AjaxResult list(SidebarTree sidebarTree)
     {
+        Long userId = null;
+        SidebarTree sidebarTree1 = null;
         System.out.println(sidebarTree);
-        Long userId = getUserId();
-        SidebarTree sidebarTree1;
+        try {
+            userId = getUserId();
+        }catch (Exception ignored){
+        }
         if(userId!=null&&userId==1){
             sidebarTree1 = sidebarTreeService.selectAllTreeNode(true,sidebarTree);
         }
