@@ -186,10 +186,16 @@ public class SidebarTreeServiceImpl implements ISidebarTreeService
             //若有子节点
             if(!isAdmin){
                 for(int i=childrenTree.size()-1; i>=0 ; i--){
-                    // 当不是管理员时。删除isShow为0且创建者不是自己的节点
+                    // 当不是管理员时。删除isShow为0且创建者不是自己的节点,未登录只展示公开节点
                     SidebarTree sidebarTree =childrenTree.get(i);
-                    if(sidebarTree.getIsShow() == 0 && Objects.isNull(userId) || !Objects.equals(sidebarTree.getCreateBy(), userId.toString())){
-                        childrenTree.remove(sidebarTree);
+                    if(sidebarTree.getIsShow() == 0){
+                        if(userId==null){
+                            childrenTree.remove(sidebarTree);
+                        }else{
+                            if(!Objects.equals(sidebarTree.getCreateBy(), userId.toString())){
+                                childrenTree.remove(sidebarTree);
+                            }
+                        }
                     }
                 }
             }
